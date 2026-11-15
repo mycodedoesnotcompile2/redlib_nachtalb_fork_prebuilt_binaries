@@ -334,13 +334,16 @@ jobs:
             echo "CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS:-} -msse2" >> "$GITHUB_ENV"
           fi
           
-          sed -i '/^\[target\.i686-unknown-linux-musl\]$/a env.passthrough = ["CFLAGS", "CXXFLAGS", "CMAKE_C_FLAGS", "CMAKE_CXX_FLAGS"]' "$CROSS_CONFIG"
+          #sed -i '/^\[target\.i686-unknown-linux-musl\]$/a env.passthrough = ["CFLAGS", "CXXFLAGS", "CMAKE_C_FLAGS", "CMAKE_CXX_FLAGS"]' "$CROSS_CONFIG"
+          
+          sed -i '/^\[target\.i686-unknown-linux-musl\]$/a [target.i686-unknown-linux-musl.env]\npassthrough = ["CFLAGS", "CXXFLAGS", "CMAKE_C_FLAGS", "CMAKE_CXX_FLAGS"]' "$CROSS_CONFIG"
           echo "========== Patched cross.toml for SSE2 =========="
           grep -A3 -E '^\[target\.i686-unknown-linux-musl' "$CROSS_CONFIG"
           echo "================================================="
 
           # Enable 64-bit time for 32-bit ARM builds
-          if [[ "$TARGET" == "armv7-unknown-linux-musleabihf" || \
+          if [[ "$TARGET" == "i686-unknown-linux-musl" || \
+                "$TARGET" == "armv7-unknown-linux-musleabihf" || \
                 "$TARGET" == "arm-unknown-linux-musleabihf" || \
                 "$TARGET" == "arm-unknown-linux-musleabi" ]]; then
                 echo "RUSTFLAGS=${RUSTFLAGS:-} --cfg=libc_unstable_musl_v1_2_3" >> "$GITHUB_ENV"
