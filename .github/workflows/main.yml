@@ -338,21 +338,28 @@ jobs:
             sed -i 's/^[[:space:]]*lto[[:space:]]*=.*/lto = false/' Cargo.toml
             grep -i lto Cargo.toml
           fi
+
+          # Enable SSE2 for i686 Linux and Windows GNU targets
+          for TARGET_NAME in i686-unknown-linux-gnu i686-unknown-linux-musl i686-pc-windows-gnu; do
+            sed -i "/^\[target\.${TARGET_NAME}\]$/a env.vars.CFLAGS = \"-msse2\"\nenv.vars.CXXFLAGS = \"-msse2\"" "$CROSS_CONFIG"
+          done
+          echo "========== Patched cross.toml =========="
+          grep -A3 -E '^\[target\.i686-' "$CROSS_CONFIG"
           
-          # Enable SSE2 for i686 builds (BoringSSL)
-          if [[ "$TARGET" == "i686-unknown-linux-gnu" || "$TARGET" == "i686-unknown-linux-musl" ]]; then
-            echo "CFLAGS=${CFLAGS:-} -msse2" >> "$GITHUB_ENV"
-            echo "CXXFLAGS=${CXXFLAGS:-} -msse2" >> "$GITHUB_ENV"
+          # # Enable SSE2 for i686 builds (BoringSSL)
+          # if [[ "$TARGET" == "i686-unknown-linux-gnu" || "$TARGET" == "i686-unknown-linux-musl" ]]; then
+          #   echo "CFLAGS=${CFLAGS:-} -msse2" >> "$GITHUB_ENV"
+          #   echo "CXXFLAGS=${CXXFLAGS:-} -msse2" >> "$GITHUB_ENV"
 
-            echo "CFLAGS_i686_unknown_linux_gnu=${CFLAGS_i686_unknown_linux_gnu:-} -msse2" >> "$GITHUB_ENV"
-            echo "CXXFLAGS_i686_unknown_linux_gnu=${CXXFLAGS_i686_unknown_linux_gnu:-} -msse2" >> "$GITHUB_ENV"
+          #   echo "CFLAGS_i686_unknown_linux_gnu=${CFLAGS_i686_unknown_linux_gnu:-} -msse2" >> "$GITHUB_ENV"
+          #   echo "CXXFLAGS_i686_unknown_linux_gnu=${CXXFLAGS_i686_unknown_linux_gnu:-} -msse2" >> "$GITHUB_ENV"
 
-            echo "CFLAGS_i686_unknown_linux_musl=${CFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
-            echo "CXXFLAGS_i686_unknown_linux_musl=${CXXFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
+          #   echo "CFLAGS_i686_unknown_linux_musl=${CFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
+          #   echo "CXXFLAGS_i686_unknown_linux_musl=${CXXFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
 
-            echo "CMAKE_C_FLAGS=${CMAKE_C_FLAGS:-} -msse2" >> "$GITHUB_ENV"
-            echo "CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS:-} -msse2" >> "$GITHUB_ENV"
-          fi
+          #   echo "CMAKE_C_FLAGS=${CMAKE_C_FLAGS:-} -msse2" >> "$GITHUB_ENV"
+          #   echo "CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS:-} -msse2" >> "$GITHUB_ENV"
+          # fi
 
           # Enable 64-bit time for 32-bit ARM builds
           if [[ "$TARGET" == "armv7-unknown-linux-musleabihf" || \
