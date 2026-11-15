@@ -357,6 +357,7 @@ jobs:
 
           if [[ "$TARGET" == "aarch64-linux-android" || "$TARGET" = "armv7-linux-androideabi" ]]; then
             echo "ANDROID_NDK_HOME=/android-ndk" >> $GITHUB_ENV
+          fi
 
       - name: Run build
         run: |
