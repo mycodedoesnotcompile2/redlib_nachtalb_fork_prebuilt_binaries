@@ -134,6 +134,7 @@ jobs:
           - TARGET: armv7-unknown-linux-gnueabihf
             OS: ubuntu-latest
             CC_PKG: crossbuild-essential-armhf
+            CC_COMPILER: cross
             
           # ============================================================
           # ARM Linux
@@ -348,7 +349,7 @@ jobs:
           fi
 
           # enable 64-bit time for 32-bit
-          if [[ "$TARGET" == "armv7-unknown-linux-musleabihf" ]]; then
+          if [[ "$TARGET" == "armv7-unknown-linux-musleabihf" || "$TARGET" == "armv7-unknown-linux-gnueabihf" || "$TARGET" == "arm-unknown-linux-musleabihf" ]]; then
               export RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1
           fi
 
