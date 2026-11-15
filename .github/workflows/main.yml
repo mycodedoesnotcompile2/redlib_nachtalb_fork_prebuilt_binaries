@@ -118,7 +118,7 @@ jobs:
 
           - TARGET: aarch64-unknown-linux-musl
             OS: ubuntu-24.04-arm
-            CC_COMPILER: cross
+            #CC_COMPILER: cross
             
           - TARGET: aarch64-unknown-linux-gnu
             OS: ubuntu-24.04-arm
@@ -333,6 +333,17 @@ jobs:
             cd "$REDLIB_ROOT_DIR"
             sed -i 's/^[[:space:]]*lto[[:space:]]*=.*/lto = false/' Cargo.toml
             grep -i lto Cargo.toml
+          fi
+      
+      - name: Enable SSE2 for i686 builds
+        run: |
+          if [[ "$TARGET" == "i686-unknown-linux-gnu" || "$TARGET" == "i686-unknown-linux-musl" ]]; then
+              export CFLAGS="${CFLAGS:-} -msse2"
+              export CXXFLAGS="${CXXFLAGS:-} -msse2"
+              export CFLAGS_i686_unknown_linux_gnu="${CFLAGS_i686_unknown_linux_gnu:-} -msse2"
+              export CXXFLAGS_i686_unknown_linux_gnu="${CXXFLAGS_i686_unknown_linux_gnu:-} -msse2"
+              export CFLAGS_i686_unknown_linux_musl="${CFLAGS_i686_unknown_linux_musl:-} -msse2"
+              export CXXFLAGS_i686_unknown_linux_musl="${CXXFLAGS_i686_unknown_linux_musl:-} -msse2"
           fi
 
       - name: Run build
