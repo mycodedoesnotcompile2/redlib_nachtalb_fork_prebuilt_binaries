@@ -3,7 +3,7 @@ name: Build binary
 on:
   #workflow_dispatch
   schedule:
-   - cron: '5 5 * * *'
+   - cron: '14 3 * * *'
 
 permissions:
   contents: write
