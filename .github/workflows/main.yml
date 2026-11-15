@@ -182,7 +182,7 @@ jobs:
             
           - TARGET: i686-pc-windows-gnu
             OS: ubuntu-latest
-            CC_PKG: gcc-mingw-w64-i686 g++-mingw-w64-i686 nasm
+            CC_PKG: gcc-mingw-w64-i686 g++-mingw-w64-i686 nasm clang
             
 
           # ============================================================
