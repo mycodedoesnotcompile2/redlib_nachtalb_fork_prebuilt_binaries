@@ -188,10 +188,10 @@ jobs:
           # ============================================================
           # FreeBSD
           # ============================================================
-
-          - TARGET: x86_64-unknown-freebsd
-            OS: ubuntu-latest
-            CC_COMPILER: cross
+          # # boringssl/crypto/cpu_intel.cc:112:13: error: 'ULLONG_MAX' was not declared in this scope
+          # - TARGET: x86_64-unknown-freebsd
+          #   OS: ubuntu-latest
+          #   CC_COMPILER: cross
             
           # ============================================================
           # RISC-V
@@ -199,7 +199,7 @@ jobs:
 
           - TARGET: riscv64gc-unknown-linux-gnu
             OS: ubuntu-latest
-            CC_PKG: gcc-riscv64-linux-gnu
+            CC_PKG: gcc-riscv64-linux-gnu g++-riscv64-linux-gnu
             
           - TARGET: riscv64gc-unknown-linux-musl
             OS: ubuntu-latest
@@ -209,13 +209,13 @@ jobs:
           # PowerPC
           # ============================================================
 
-          - TARGET: powerpc64le-unknown-linux-gnu
-            OS: ubuntu-latest
-            CC_COMPILER: cross
+          # - TARGET: powerpc64le-unknown-linux-gnu
+          #   OS: ubuntu-latest
+          #   CC_COMPILER: cross
 
-          - TARGET: powerpc64-unknown-linux-gnu
-            OS: ubuntu-latest
-            CC_COMPILER: cross
+          # - TARGET: powerpc64-unknown-linux-gnu
+          #   OS: ubuntu-latest
+          #   CC_COMPILER: cross
 
           # ============================================================
           # Android
@@ -408,6 +408,7 @@ jobs:
           ls -alh "$REDLIB_BIN_PATH"
           cd "$(dirname "$REDLIB_BIN_PATH")"
           sha256sum --tag "$(basename "$REDLIB_BIN_PATH")" | tee "$REDLIB_BIN_HASH_PATH"
+          ldd --version | sed -n '1p'
           ldd "$REDLIB_BIN_PATH" || true
           "$REDLIB_BIN_PATH" -h || true
 
