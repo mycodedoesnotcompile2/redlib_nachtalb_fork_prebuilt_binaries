@@ -304,31 +304,6 @@ jobs:
             rustup target add $TARGET
           fi
 
-      # - name: Patch stuff in Cargo.toml
-      #   run: |
-      #     cd "$REDLIB_ROOT_DIR"
-
-      #     #sed -Ei 's/^([[:space:]]*rustls[[:space:]]*=[[:space:]]*)"([^"]+)"[[:space:]]*$/\1{ version = "\2", features = ["dangerous_configuration"] }/' cli/Cargo.toml
-      #     #sed -E -i '' 's/^([[:space:]]*rustls[[:space:]]*=[[:space:]]*)"([^"]+)"[[:space:]]*$/\1{ version = "\2", features = ["dangerous_configuration"] }/' cli/Cargo.toml
-      #     grep -i "rustls" cli/Cargo.toml
-
-      #     # Only OpenSSL/native-tls builds need the native-tls vendored patch.
-      #     if [[ "$TLS" == "openssl" ]] && \
-      #        [[ $TARGET == *"-musl"* || \
-      #           $TARGET == "arm"* || \
-      #           $TARGET == "risc"* || \
-      #           $TARGET == "mips"* || \
-      #           $TARGET == "powerpc"* || \
-      #           $TARGET == *"android" || \
-      #           $TARGET = i*86-unknown-linux-gnu ]]; then
-
-      #       sed -Ei \
-      #         -e 's|^native-tls = "([^"]+)"$|native-tls = { version = "\1", features = ["vendored"] }|' \
-      #         -e 's|^native-tls = \{(.*)\}$|native-tls = {\1, features = ["vendored"]}|' \
-      #         crates/collector/Cargo.toml
-      #       grep -R 'vendored' -n .
-      #     fi
-
       - name: Various patches
         if: runner.os != 'macOS'
         run: |
@@ -350,8 +325,8 @@ jobs:
             echo "CFLAGS_i686_unknown_linux_musl=${CFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
             echo "CXXFLAGS_i686_unknown_linux_musl=${CXXFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
 
-            echo "CFLAGS_i686_pc_windows_gnu=${CFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
-            echo "CXXFLAGS_i686_pc_windows_gnu=${CXXFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
+            echo "CFLAGS_i686_pc_windows_gnu=${CFLAGS_i686_pc_windows_gnu:-} -msse2" >> "$GITHUB_ENV"
+            echo "CXXFLAGS_i686_pc_windows_gnu=${CXXFLAGS_i686_pc_windows_gnu:-} -msse2" >> "$GITHUB_ENV"
             
             echo "CMAKE_C_FLAGS=${CMAKE_C_FLAGS:-} -msse2" >> "$GITHUB_ENV"
             echo "CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS:-} -msse2" >> "$GITHUB_ENV"
@@ -365,8 +340,7 @@ jobs:
           echo "================================================="
 
           # Enable 64-bit time for 32-bit ARM builds
-          if [[ "$TARGET" == "i686-unknown-linux-musl" || \
-                "$TARGET" == "armv7-unknown-linux-musleabihf" || \
+          if [[ "$TARGET" == "armv7-unknown-linux-musleabihf" || \
                 "$TARGET" == "arm-unknown-linux-musleabihf" || \
                 "$TARGET" == "arm-unknown-linux-musleabi" ]]; then
                 #echo "RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1" >> "$GITHUB_ENV"
@@ -376,7 +350,6 @@ jobs:
           # Enable 64-bit time for 32-bit ARM targets
           for TARGET_NAME in \
               armv7-unknown-linux-musleabihf \
-              i686-unknown-linux-musl \
               arm-unknown-linux-musleabihf \
               arm-unknown-linux-musleabi; do
               sed -i "/^\[target\.${TARGET_NAME}\]$/a env.vars.RUST_LIBC_UNSTABLE_MUSL_V1_2_3 = \"1\"" "$CROSS_CONFIG"
