@@ -332,30 +332,29 @@ jobs:
             echo "CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS:-} -msse2" >> "$GITHUB_ENV"
           fi
           
-          for TARGET_NAME in i686-unknown-linux-gnu i686-unknown-linux-musl i686-pc-windows-gnu; do
-            sed -i "/^\[target\.${TARGET_NAME}\]$/a env.vars.CFLAGS = \"-msse2\"\nenv.vars.CXXFLAGS = \"-msse2\"" "$CROSS_CONFIG"
-          done
-          echo "========== Patched cross.toml for SSE2 =========="
-          grep -A3 -E '^\[target\.i686-' "$CROSS_CONFIG"
-          echo "================================================="
+          # for TARGET_NAME in i686-unknown-linux-gnu i686-unknown-linux-musl ; do
+          #   sed -i "/^\[target\.${TARGET_NAME}\]$/a env.vars.CFLAGS = \"-msse2\"\nenv.vars.CXXFLAGS = \"-msse2\"" "$CROSS_CONFIG"
+          # done
+          # echo "========== Patched cross.toml for SSE2 =========="
+          # grep -A3 -E '^\[target\.i686-' "$CROSS_CONFIG"
+          # echo "================================================="
 
           # Enable 64-bit time for 32-bit ARM builds
           if [[ "$TARGET" == "armv7-unknown-linux-musleabihf" || \
                 "$TARGET" == "arm-unknown-linux-musleabihf" || \
                 "$TARGET" == "arm-unknown-linux-musleabi" ]]; then
-                #echo "RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1" >> "$GITHUB_ENV"
                 echo "RUSTFLAGS=${RUSTFLAGS:-} --cfg=libc_unstable_musl_v1_2_3" >> "$GITHUB_ENV"
           fi
 
-          # Enable 64-bit time for 32-bit ARM targets
-          for TARGET_NAME in \
-              armv7-unknown-linux-musleabihf \
-              arm-unknown-linux-musleabihf \
-              arm-unknown-linux-musleabi; do
-              sed -i "/^\[target\.${TARGET_NAME}\]$/a env.vars.RUST_LIBC_UNSTABLE_MUSL_V1_2_3 = \"1\"" "$CROSS_CONFIG"
-          done
-          echo "========== Patched cross.toml for 64-bit time in 32-bit  =========="
-          grep -A3 -E '^\[target\.arm(v7)?-unknown-linux-' "$CROSS_CONFIG"
+          # # Enable 64-bit time for 32-bit ARM targets
+          # for TARGET_NAME in \
+          #     armv7-unknown-linux-musleabihf \
+          #     arm-unknown-linux-musleabihf \
+          #     arm-unknown-linux-musleabi; do
+          #     sed -i "/^\[target\.${TARGET_NAME}\]$/a env.vars.RUST_LIBC_UNSTABLE_MUSL_V1_2_3 = \"1\"" "$CROSS_CONFIG"
+          # done
+          # echo "========== Patched cross.toml for 64-bit time in 32-bit  =========="
+          # grep -A3 -E '^\[target\.arm(v7)?-unknown-linux-' "$CROSS_CONFIG"
           
           # Configure Android NDK
           if [[ "$TARGET" == "aarch64-linux-android" || \
