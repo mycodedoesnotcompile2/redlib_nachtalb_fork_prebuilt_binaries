@@ -90,12 +90,13 @@ jobs:
           # ============================================================
 
           - TARGET: x86_64-unknown-linux-musl
-            #OS: ubuntu-latest
-            OS: ubuntu-24.04
+            OS: ubuntu-latest
             CC_COMPILER: cross
 
           - TARGET: x86_64-unknown-linux-gnu
+            # yes, old version, but for people who need old GLIBC
             OS: ubuntu-22.04
+            
 
           # ============================================================
           # i686 Linux
@@ -430,7 +431,7 @@ jobs:
           mv -f *.sha256.txt "/tmp/hashes/"
 
       - name: Create a new Github release
-        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 #v3.0.2
+        uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 #v3.0.4
         with:
           make_latest: true
           body_path: ${{ env.RELEASE_NOTES }}
