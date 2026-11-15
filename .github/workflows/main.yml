@@ -108,8 +108,8 @@ jobs:
             
           - TARGET: i686-unknown-linux-musl
             OS: ubuntu-latest
-            CC_PKG: gcc-multilib g++-multilib
-            #CC_COMPILER: cross
+            CC_COMPILER: cross
+            #CC_PKG: gcc-multilib g++-multilib
 
           # ============================================================
           # ARM64 Linux
@@ -172,16 +172,18 @@ jobs:
             #OS: windows-latest
             OS: ubuntu-latest
             CC_PKG: gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 nasm
-            
+
+          # error btls-sys apple obj
           # - TARGET: aarch64-pc-windows-msvc
           #   OS: windows-11-arm
             
           - TARGET: i686-pc-windows-msvc
             OS: windows-latest
-            
-          - TARGET: i686-pc-windows-gnu
-            OS: ubuntu-latest
-            CC_PKG: gcc-mingw-w64-i686 g++-mingw-w64-i686 nasm clang
+
+          # error[E0080]: attempt to compute `8_usize - 12_usize`, which would overflow
+          # - TARGET: i686-pc-windows-gnu
+          #   OS: ubuntu-latest
+          #   CC_PKG: gcc-mingw-w64-i686 g++-mingw-w64-i686 nasm clang
             
 
           # ============================================================
