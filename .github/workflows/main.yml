@@ -37,7 +37,7 @@ jobs:
           cd /tmp/
 
           REDLIB_PREBUILT_LATEST_TAG=$(gh release list \
-            -R mycodedoesnotcompile2/redlib_nachtalb_fork \
+            -R mycodedoesnotcompile2/redlib_nachtalb_fork_prebuilt_binaries \
             --json tagName \
             -L 1 \
             --jq '.[].tagName' \
@@ -105,11 +105,12 @@ jobs:
           - TARGET: i686-unknown-linux-gnu
             OS: ubuntu-latest
             CC_PKG: gcc-multilib g++-multilib
-            
-          - TARGET: i686-unknown-linux-musl
-            OS: ubuntu-latest
-            CC_COMPILER: cross
-            #CC_PKG: gcc-multilib g++-multilib
+
+          # nightmare errors for t_time
+          # - TARGET: i686-unknown-linux-musl
+          #   OS: ubuntu-latest
+          #   CC_COMPILER: cross
+          #   #CC_PKG: gcc-multilib g++-multilib
 
           # ============================================================
           # ARM64 Linux
@@ -333,13 +334,11 @@ jobs:
             echo "CMAKE_C_FLAGS=${CMAKE_C_FLAGS:-} -msse2" >> "$GITHUB_ENV"
             echo "CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS:-} -msse2" >> "$GITHUB_ENV"
           fi
-          
-          #sed -i '/^\[target\.i686-unknown-linux-musl\]$/a env.passthrough = ["CFLAGS", "CXXFLAGS", "CMAKE_C_FLAGS", "CMAKE_CXX_FLAGS"]' "$CROSS_CONFIG"
-          
-          sed -i '/^\[target\.i686-unknown-linux-musl\]$/a [target.i686-unknown-linux-musl.env]\npassthrough = ["CFLAGS", "CXXFLAGS", "CMAKE_C_FLAGS", "CMAKE_CXX_FLAGS"]' "$CROSS_CONFIG"
-          echo "========== Patched cross.toml for SSE2 =========="
-          grep -A3 -E '^\[target\.i686-unknown-linux-musl' "$CROSS_CONFIG"
-          echo "================================================="
+                   
+          # sed -i '/^\[target\.i686-unknown-linux-musl\]$/a [target.i686-unknown-linux-musl.env]\npassthrough = ["CFLAGS", "CXXFLAGS", "CMAKE_C_FLAGS", "CMAKE_CXX_FLAGS"]' "$CROSS_CONFIG"
+          # echo "========== Patched cross.toml for SSE2 =========="
+          # grep -A3 -E '^\[target\.i686-unknown-linux-musl' "$CROSS_CONFIG"
+          # echo "================================================="
 
           # Enable 64-bit time for 32-bit ARM builds
           if [[ "$TARGET" == "i686-unknown-linux-musl" || \
@@ -365,11 +364,6 @@ jobs:
           fi
 
           BUILD_ARGS=(build -p "$REDLIB_BIN_NAME" --release --target "$TARGET")
-
-          # # OpenSSL/native-tls build
-          # if [[ "$TLS" == "openssl" ]]; then
-          #   BUILD_ARGS+=(--no-default-features --features tls-native)
-          # fi
 
           echo "=========================================="
           echo "Building:"
