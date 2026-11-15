@@ -331,6 +331,7 @@ jobs:
       #     fi
 
       - name: Various patches
+        if: runner.os != 'macOS'
         run: |
           # Patch lto in Cargo.toml for mips
           if [[ $TARGET == "mips"* ]]; then
@@ -343,14 +344,15 @@ jobs:
           if [[ "$TARGET" == "i686-unknown-linux-gnu" || "$TARGET" == "i686-unknown-linux-musl" || "$TARGET" == "i686-pc-windows-gnu" ]]; then
             echo "CFLAGS=${CFLAGS:-} -msse2" >> "$GITHUB_ENV"
             echo "CXXFLAGS=${CXXFLAGS:-} -msse2" >> "$GITHUB_ENV"
+            
             echo "CFLAGS_i686_unknown_linux_gnu=${CFLAGS_i686_unknown_linux_gnu:-} -msse2" >> "$GITHUB_ENV"
             echo "CXXFLAGS_i686_unknown_linux_gnu=${CXXFLAGS_i686_unknown_linux_gnu:-} -msse2" >> "$GITHUB_ENV"
             
             echo "CFLAGS_i686_unknown_linux_musl=${CFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
             echo "CXXFLAGS_i686_unknown_linux_musl=${CXXFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
 
-            echo "CFLAGS_i686_pc_linux_gnu=${CFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
-            echo "CXXFLAGS_i686_pc_linux_gnu=${CXXFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
+            echo "CFLAGS_i686_pc_windows_gnu=${CFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
+            echo "CXXFLAGS_i686_pc_windows_gnu=${CXXFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
             
             echo "CMAKE_C_FLAGS=${CMAKE_C_FLAGS:-} -msse2" >> "$GITHUB_ENV"
             echo "CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS:-} -msse2" >> "$GITHUB_ENV"
@@ -382,6 +384,7 @@ jobs:
                 "$TARGET" == "armv7-unknown-linux-gnueabihf" || \
                 "$TARGET" == "arm-unknown-linux-musleabihf" || \
                 "$TARGET" == "arm-unknown-linux-musleabi" ]]; then
+            echo "RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1" >> "$GITHUB_ENV"
             echo "RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1" >> "$GITHUB_ENV"
           fi
 
