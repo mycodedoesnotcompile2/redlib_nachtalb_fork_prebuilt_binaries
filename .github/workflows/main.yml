@@ -170,17 +170,19 @@ jobs:
             OS: windows-latest
             
           - TARGET: x86_64-pc-windows-gnu
-            OS: windows-latest
+            #OS: windows-latest
+            OS: ubuntu-latest
+            CC_PKG: gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 nasm
             
-          - TARGET: aarch64-pc-windows-msvc
-            OS: windows-11-arm
+          # - TARGET: aarch64-pc-windows-msvc
+          #   OS: windows-11-arm
             
           - TARGET: i686-pc-windows-msvc
             OS: windows-latest
             
           - TARGET: i686-pc-windows-gnu
             OS: ubuntu-latest
-            CC_PKG: gcc-mingw-w64-i686 nasm
+            CC_PKG: gcc-mingw-w64-i686 g++-mingw-w64-i686 nasm
             
 
           # ============================================================
