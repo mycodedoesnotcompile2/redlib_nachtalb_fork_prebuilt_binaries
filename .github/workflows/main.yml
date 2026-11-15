@@ -339,7 +339,18 @@ jobs:
             grep -i lto Cargo.toml
           fi
 
-          # Enable SSE2 for i686 Linux and Windows GNU targets
+          # Enable SSE2 for i686 Linux and Windows GNU targets (BoringSSL)
+          if [[ "$TARGET" == "i686-unknown-linux-gnu" || "$TARGET" == "i686-unknown-linux-musl" ]]; then
+            echo "CFLAGS=${CFLAGS:-} -msse2" >> "$GITHUB_ENV"
+            echo "CXXFLAGS=${CXXFLAGS:-} -msse2" >> "$GITHUB_ENV"
+            echo "CFLAGS_i686_unknown_linux_gnu=${CFLAGS_i686_unknown_linux_gnu:-} -msse2" >> "$GITHUB_ENV"
+            echo "CXXFLAGS_i686_unknown_linux_gnu=${CXXFLAGS_i686_unknown_linux_gnu:-} -msse2" >> "$GITHUB_ENV"
+            echo "CFLAGS_i686_unknown_linux_musl=${CFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
+            echo "CXXFLAGS_i686_unknown_linux_musl=${CXXFLAGS_i686_unknown_linux_musl:-} -msse2" >> "$GITHUB_ENV"
+            echo "CMAKE_C_FLAGS=${CMAKE_C_FLAGS:-} -msse2" >> "$GITHUB_ENV"
+            echo "CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS:-} -msse2" >> "$GITHUB_ENV"
+          fi
+          
           for TARGET_NAME in i686-unknown-linux-gnu i686-unknown-linux-musl i686-pc-windows-gnu; do
             sed -i "/^\[target\.${TARGET_NAME}\]$/a env.vars.CFLAGS = \"-msse2\"\nenv.vars.CXXFLAGS = \"-msse2\"" "$CROSS_CONFIG"
           done
