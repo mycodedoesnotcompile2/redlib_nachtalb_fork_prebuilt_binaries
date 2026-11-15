@@ -355,6 +355,9 @@ jobs:
               export RUST_LIBC_UNSTABLE_MUSL_V1_2_3=1
           fi
 
+          if [[ "$TARGET" == "aarch64-linux-android" || "$TARGET" = "armv7-linux-androideabi" ]]; then
+            echo "ANDROID_NDK_HOME=/android-ndk" >> $GITHUB_ENV
+
       - name: Run build
         run: |
           cd "$REDLIB_ROOT_DIR"
