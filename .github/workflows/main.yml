@@ -191,9 +191,9 @@ jobs:
           # FreeBSD
           # ============================================================
           # # boringssl/crypto/cpu_intel.cc:112:13: error: 'ULLONG_MAX' was not declared in this scope
-          - TARGET: x86_64-unknown-freebsd
-            OS: ubuntu-latest
-            CC_COMPILER: cross
+          # - TARGET: x86_64-unknown-freebsd
+          #   OS: ubuntu-latest
+          #   CC_COMPILER: cross
             
           # ============================================================
           # RISC-V
