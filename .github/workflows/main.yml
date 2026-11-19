@@ -1,9 +1,9 @@
 name: Build binary
 
 on:
-  workflow_dispatch
-  # schedule:
-  #  - cron: '14 3 * * *'
+  #workflow_dispatch
+  schedule:
+   - cron: '14 3 * * *'
 
 permissions:
   contents: write
@@ -174,9 +174,9 @@ jobs:
             OS: ubuntu-latest
             CC_PKG: gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 nasm
 
-          # error btls-sys apple obj
-          - TARGET: aarch64-pc-windows-msvc
-            OS: windows-11-arm
+          # # error btls-sys apple obj
+          # - TARGET: aarch64-pc-windows-msvc
+          #   OS: windows-11-arm
             
           - TARGET: i686-pc-windows-msvc
             OS: windows-latest
